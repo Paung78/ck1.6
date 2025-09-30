@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ai Prediction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0f1d, #1c2337);
+      color: #e5edff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .container {
+      background: #10192d;
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15), inset 0 0 8px #00d9ff30;
+      text-align: center;
+      width: 100%;
+      max-width: 420px;
+      transition: 0.4s ease;
+    }
+
+    .container:hover {
+      box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3), inset 0 0 10px #00c0ff55;
+      transform: translateY(-4px);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 10px #00e5ff60;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 25px;
+      border: none;
+      border-radius: 14px;
+      background: #0f1a2c;
+      color: #d0eaff;
+      font-size: 1.1rem;
+      text-align: center;
+      box-shadow: inset 0 0 10px #0b314f;
+      transition: 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      background: #162c4d;
+      box-shadow: 0 0 12px #00cfff;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 18px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: linear-gradient(90deg, #00eaff, #0070ff);
+      color: #06121d;
+      text-transform: uppercase;
+      box-shadow: 0 6px 20px rgba(0, 195, 255, 0.5);
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #0090dd, #0040aa);
+      color: #d8f6ff;
+      transform: translateY(-2px);
+    }
+
+    .btn-channel {
+      background: linear-gradient(90deg, #3a7dff, #00aaff);
+      color: #fff;
+    }
+
+    .btn-owner {
+      background: linear-gradient(90deg, #ffc400, #ffaa00);
+      color: #241a00;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #8095b3;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .digits-inputs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .digits-inputs input {
+      width: 45px;
+      height: 60px;
+      font-size: 2rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      background: #0e1f33;
+      color: #00ddff;
+      text-align: center;
+      box-shadow: inset 0 0 8px #004a70;
+    }
+
+    #result {
+      margin-top: 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background: #141e36;
+      padding: 14px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #00385050;
+      min-height: 58px;
+    }
+
+    #result.big {
+      color: #00ffad;
+      border: 2px solid #00d9a0;
+    }
+
+    #result.small {
+      color: #ff7070;
+      border: 2px solid #ff4d4d;
+    }
+
+    #page2 {
+      display: none;
+    }
+
+    .loading-dots::after {
+      content: '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
+      animation: dots 1s steps(10) infinite;
+      display: inline-block;
+      font-size: 1.4rem;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes dots {
+      to { content: '⠋'; }
+    }
+
+    @media (max-width: 480px) {
+      .digits-inputs input {
+        width: 38px;
+        height: 50px;
+        font-size: 1.6rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="page1">
+    <h1>Ai Prediction</h1>
+    <input type="password" id="keyInput" placeholder="Enter Access Key" maxlength="12" />
+    <button class="btn" onclick="checkKey()">Start AI Prediction</button>
+    <button class="btn btn-channel" onclick="window.open('https://t.me/PGMONEY67800', '_blank')">Join Telegram Channel</button>
+    <button class="btn btn-owner" onclick="window.open('https://t.me/Paunggyi111', '_blank')">Contact Owner</button>
+    <div class="footer">CRD BY PYAUNGGYI</div>
+  </div>
+
+  <div class="container" id="page2">
+    <h1>Enter 5 Digits (0-9)</h1>
+    <div class="digits-inputs">
+      <input type="text" maxlength="1" class="digit-input" />
+      <input type="text" maxlength="1" class="digit-input" />
+      <input type="text" maxlength="1" class="digit-input" />
+      <input type="text" maxlength="1" class="digit-input" />
+      <input type="text" maxlength="1" class="digit-input" />
+    </div>
+    <button class="btn" onclick="handlePredict()">Predict Number</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const ACCESS_KEY = "Ai112233";
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+    const keyInput = document.getElementById("keyInput");
+    const digitInputs = document.querySelectorAll(".digit-input");
+    const resultDiv = document.getElementById("result");
+
+    function checkKey() {
+      if (keyInput.value.trim() === ACCESS_KEY) {
+        page1.style.display = "none";
+        page2.style.display = "block";
+        digitInputs[0].focus();
+      } else {
+        alert("Invalid Access Key!");
+        keyInput.value = "";
+        keyInput.focus();
+      }
+    }
+
+    digitInputs.forEach((input, idx) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/[^0-9]/g, "");
+        if (input.value && idx < digitInputs.length - 1) {
+          digitInputs[idx + 1].focus();
+        }
+        resultDiv.textContent = "";
+        resultDiv.classList.remove("big", "small");
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && idx > 0) {
+          digitInputs[idx - 1].focus();
+        }
+      });
+    });
+
+    function predict(numbers) {
+      const digits = numbers.map(n => parseInt(n));
+      const sum = digits.reduce((a, b) => a + b, 0);
+      const confidence = 100 - Math.abs(sum - 22.5) * 4;
+      const prediction = sum > 22 ? "Big" : "Small";
+      return { prediction, confidence: confidence.toFixed(1), sum };
+    }
+
+    function handlePredict() {
+      const values = [...digitInputs].map(i => i.value.trim());
+      if (values.some(v => !/^\d$/.test(v))) {
+        alert("Please enter all 5 digits correctly.");
+        return;
+      }
+
+      resultDiv.textContent = "Analyzing...";
+      resultDiv.classList.remove("big", "small");
+      resultDiv.classList.add("loading-dots");
+
+      setTimeout(() => {
+        const { prediction, confidence, sum } = predict(values);
+        resultDiv.classList.remove("loading-dots");
+        resultDiv.textContent = `Prediction: ${prediction} (Sum: ${sum}) — Confidence: ${confidence}%`;
+        resultDiv.classList.add(prediction.toLowerCase());
+      }, 3000);
+    }
+
+    keyInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        checkKey();
+      }
+    });
+  </script>
+</body>
+</html>
