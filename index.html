@@ -3,606 +3,447 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PREMIUM TRX AI SERVER</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <title>Prediction AI Pattern</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
     :root {
-      --neon-blue: #00f0ff;
-      --neon-purple: #b300ff;
-      --neon-pink: #ff00f5;
-      --neon-green: #00ff9d;
-      --neon-yellow: #fff000;
-      --deep-space: #050510;
-      --glass-dark: rgba(15, 15, 35, 0.7);
-      --glass-light: rgba(255, 255, 255, 0.1);
-      --starlight: #f0f0ff;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      --primary: #FF9E7D;
+      --secondary: #7DB7FF;
+      --accent: #D67DFF;
+      --dark: #0a0a12;
+      --darker: #050508;
+      --light: #f0f0ff;
     }
     
     body {
-      font-family: 'Rajdhani', sans-serif;
-      background-color: var(--deep-space);
-      color: var(--starlight);
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--darker);
+      color: var(--light);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      justify-content: center;
+      height: 100vh;
       overflow: hidden;
       background-image: 
-        radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.05) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(179, 0, 255, 0.05) 0%, transparent 25%),
-        linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(5,5,16,0.95));
-      position: relative;
+        radial-gradient(circle at 25% 25%, rgba(214, 125, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(125, 183, 255, 0.1) 0%, transparent 50%);
     }
-
-    /* Animated background elements */
-    .bg-elements {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .floating-element {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
-      filter: blur(20px);
-      animation: float 15s infinite linear;
-    }
-
-    .floating-element:nth-child(1) {
-      width: 300px;
-      height: 300px;
-      top: 10%;
-      left: 5%;
-      animation-duration: 25s;
-    }
-
-    .floating-element:nth-child(2) {
-      width: 200px;
-      height: 200px;
-      top: 60%;
-      right: 10%;
-      animation-duration: 20s;
-      background: radial-gradient(circle, rgba(179, 0, 255, 0.1) 0%, transparent 70%);
-    }
-
-    .floating-element:nth-child(3) {
-      width: 150px;
-      height: 150px;
-      bottom: 20%;
-      left: 20%;
-      animation-duration: 30s;
-      background: radial-gradient(circle, rgba(255, 0, 245, 0.1) 0%, transparent 70%);
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-      25% {
-        transform: translate(20px, 20px) rotate(90deg);
-      }
-      50% {
-        transform: translate(0, 40px) rotate(180deg);
-      }
-      75% {
-        transform: translate(-20px, 20px) rotate(270deg);
-      }
-    }
-
-    /* Glass morphism container */
-    .glass-container {
-      position: relative;
-      width: 420px;
-      padding: 30px;
-      background: rgba(15, 15, 35, 0.5);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Login Panel Styles */
+    .login-panel {
+      background: linear-gradient(145deg, #12121a, #0e0e15);
+      border: 1px solid rgba(255, 158, 125, 0.3);
       border-radius: 20px;
+      padding: 30px;
+      text-align: center;
       box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
-      z-index: 10;
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(255, 158, 125, 0.2),
+        inset 0 0 15px rgba(255, 158, 125, 0.1);
+      min-width: 350px;
+      max-width: 90%;
+      position: relative;
       overflow: hidden;
+      z-index: 1;
     }
-
-    /* Neon border effect */
-    .glass-container::before {
+    
+    .login-panel::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 20px;
-      padding: 2px;
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(255, 158, 125, 0.03) 30%,
+        rgba(255, 158, 125, 0.05) 50%,
+        rgba(255, 158, 125, 0.03) 70%,
+        transparent 100%
+      );
+      transform: rotate(30deg);
       z-index: -1;
-      opacity: 0.7;
-      animation: border-glow 3s ease-in-out infinite alternate;
+      animation: shine 8s infinite linear;
     }
-
-    @keyframes border-glow {
-      0% {
-        opacity: 0.5;
-        filter: blur(5px);
-      }
-      100% {
-        opacity: 0.8;
-        filter: blur(10px);
-      }
-    }
-
-    /* Header section */
-    .header {
-      text-align: center;
-      margin-bottom: 25px;
-      position: relative;
-    }
-
-    .logo-container {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-glow {
+    
+    .premium-badge {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--neon-blue) 0%, transparent 70%);
-      filter: blur(15px);
-      opacity: 0.5;
-      animation: logo-pulse 3s infinite alternate;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: var(--dark);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(255, 158, 125, 0.5);
+      animation: pulse 2s infinite;
     }
-
-    @keyframes logo-pulse {
-      0% {
-        transform: scale(0.8);
-        opacity: 0.3;
-      }
-      100% {
-        transform: scale(1.2);
-        opacity: 0.6;
-      }
-    }
-
+    
     .logo {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto 15px;
       font-size: 32px;
       color: white;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-      transform: rotate(10deg);
-      position: relative;
-      z-index: 1;
+      box-shadow: 0 0 20px rgba(255, 158, 125, 0.5);
     }
-
+    
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.8rem;
-      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-align: center;
-      margin-bottom: 5px;
-      letter-spacing: 3px;
-      position: relative;
-      padding-bottom: 10px;
-    }
-
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 25%;
-      width: 50%;
-      height: 2px;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        var(--neon-blue),
-        var(--neon-purple),
-        transparent
-      );
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.8em;
+      color: var(--primary);
       margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(255, 158, 125, 0.5);
       letter-spacing: 1px;
     }
-
-    /* Form elements */
-    .form-group {
+    
+    .subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
       margin-bottom: 20px;
     }
-
+    
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
     label {
       display: block;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       margin-bottom: 8px;
-      color: var(--neon-blue);
-      text-align: left;
+      color: var(--primary);
     }
-
-    .input-container {
-      position: relative;
-    }
-
+    
     input {
       width: 100%;
       padding: 14px 16px;
-      background: rgba(10, 10, 25, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       font-size: 15px;
-      color: var(--starlight);
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
+      color: var(--light);
+      transition: all 0.2s;
     }
-
+    
     input:focus {
       outline: none;
-      border-color: var(--neon-blue);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 158, 125, 0.1);
     }
-
-    /* Premium badge */
-    .badge {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-      color: white;
-      padding: 6px 12px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-    }
-
-    /* Buttons */
+    
     button {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: var(--dark);
       border: none;
       border-radius: 10px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 1px;
-      position: relative;
-      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(255, 158, 125, 0.3);
     }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: 0.5s;
-    }
-
-    button:hover::before {
-      left: 100%;
-    }
-
+    
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+      box-shadow: 0 6px 16px rgba(255, 158, 125, 0.4);
     }
-
+    
     button:active {
       transform: translateY(0);
     }
-
-    /* Timer */
+    
     #timer {
       text-align: center;
       margin-top: 15px;
       font-size: 14px;
-      color: var(--neon-blue);
+      color: var(--primary);
       padding: 12px;
-      background: rgba(10, 10, 25, 0.7);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      border: 1px solid rgba(0, 240, 255, 0.2);
-      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
-    /* Success content */
+    
     #content {
       display: none;
       margin-top: 20px;
       padding: 20px;
-      background: rgba(10, 10, 25, 0.7);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       text-align: center;
-      border: 1px solid rgba(0, 240, 255, 0.2);
-      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
+    
     .success-icon {
-      color: var(--neon-green);
-      font-size: 28px;
-      margin-bottom: 12px;
-      text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+      color: var(--secondary);
+      font-size: 40px;
+      margin-bottom: 15px;
     }
-
-    /* Footer */
+    
     .footer {
-      margin-top: 25px;
+      margin-top: 20px;
       text-align: center;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.5);
     }
-
-    /* AI Server specific styles */
-    .server-indicator {
+    
+    /* Prediction Panel Styles */
+    .panel {
+      background: linear-gradient(145deg, #12121a, #0e0e15);
+      border: 1px solid rgba(255, 158, 125, 0.3);
+      border-radius: 20px;
+      padding: 30px;
       text-align: center;
-      margin: 15px 0;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.2rem;
-      color: var(--neon-blue);
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
-    }
-
-    .data-display {
-      margin: 20px 0;
-      font-size: 1rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .data-item {
-      position: relative;
-      padding: 10px 15px;
-      background: rgba(10, 10, 25, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      flex: 1;
-      overflow: hidden;
-      backdrop-filter: blur(5px);
-    }
-
-    .data-label {
-      font-size: 0.7rem;
-      color: var(--neon-blue);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 5px;
-    }
-
-    .data-value {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.1rem;
-      color: var(--starlight);
-      word-break: break-all;
-    }
-
-    /* Prediction result */
-    .prediction-container {
-      position: relative;
-      margin: 25px 0;
-      padding: 5px;
-      border-radius: 15px;
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-      animation: prediction-glow 2s infinite alternate;
-    }
-
-    @keyframes prediction-glow {
-      0% {
-        box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-      }
-      100% {
-        box-shadow: 0 0 20px rgba(179, 0, 255, 0.7);
-      }
-    }
-
-    .prediction-result {
-      padding: 20px;
-      text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      background: rgba(10, 10, 25, 0.9);
-      border-radius: 12px;
-      transition: all 0.3s ease;
-    }
-
-    .prediction-result.BIG {
-      color: var(--neon-green);
-      text-shadow: 0 0 15px rgba(0, 255, 157, 0.7);
-    }
-
-    .prediction-result.SMALL {
-      color: var(--neon-pink);
-      text-shadow: 0 0 15px rgba(255, 0, 245, 0.7);
-    }
-
-    /* Action buttons */
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0;
-      gap: 15px;
-    }
-
-    .action-btn {
-      flex: 1;
-      padding: 12px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(255, 158, 125, 0.2),
+        inset 0 0 15px rgba(255, 158, 125, 0.1);
+      min-width: 350px;
+      max-width: 90%;
       position: relative;
       overflow: hidden;
+      z-index: 1;
+      display: none;
     }
-
-    .win-btn {
-      background: linear-gradient(135deg, var(--neon-green), #00a86b);
-      color: white;
-      box-shadow: 0 4px 15px rgba(0, 255, 157, 0.3);
-    }
-
-    .win-btn:hover {
-      box-shadow: 0 6px 20px rgba(0, 255, 157, 0.5);
-    }
-
-    .lose-btn {
-      background: linear-gradient(135deg, var(--neon-pink), #cc0099);
-      color: white;
-      box-shadow: 0 4px 15px rgba(255, 0, 245, 0.3);
-    }
-
-    .lose-btn:hover {
-      box-shadow: 0 6px 20px rgba(255, 0, 245, 0.5);
-    }
-
-    /* Signature */
-    .signature {
-      margin-top: 20px;
-      font-size: 0.7rem;
-      color: rgba(200, 200, 255, 0.3);
-      text-align: center;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      position: relative;
-    }
-
-    .signature::before {
+    
+    .panel::before {
       content: '';
       position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50%;
-      height: 1px;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
       background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(0, 240, 255, 0.3),
-        transparent
+        45deg,
+        transparent 0%,
+        rgba(255, 158, 125, 0.03) 30%,
+        rgba(255, 158, 125, 0.05) 50%,
+        rgba(255, 158, 125, 0.03) 70%,
+        transparent 100%
       );
+      transform: rotate(30deg);
+      z-index: -1;
+      animation: shine 8s infinite linear;
     }
-
-    /* Credit */
-    .credit {
-      position: absolute;
-      bottom: 15px;
-      right: 15px;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.8rem;
-      color: var(--neon-purple);
-      text-transform: uppercase;
+    
+    .panel h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8em;
+      color: var(--primary);
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 158, 125, 0.5);
       letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .panel h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
       opacity: 0.7;
-      text-shadow: 0 0 5px rgba(179, 0, 255, 0.5);
-      animation: credit-glow 2s infinite alternate;
     }
-
-    @keyframes credit-glow {
-      0% { opacity: 0.5; text-shadow: 0 0 5px rgba(179, 0, 255, 0.5); }
-      100% { opacity: 1; text-shadow: 0 0 15px rgba(179, 0, 255, 0.8); }
+    
+    .data {
+      margin: 15px 0;
+      font-size: 1.1em;
+      text-shadow: 0 0 4px rgba(255, 158, 125, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
-
+    
+    .time-display {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2em;
+      color: var(--secondary);
+      text-shadow: 0 0 8px rgba(125, 183, 255, 0.5);
+      background: rgba(20, 20, 30, 0.7);
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(125, 183, 255, 0.3);
+      box-shadow: 0 0 10px rgba(125, 183, 255, 0.2);
+    }
+    
+    .big-small {
+      font-size: 1.8em;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(20, 20, 30, 0.7);
+      box-shadow: 
+        0 0 15px rgba(255, 158, 125, 0.3),
+        inset 0 0 10px rgba(255, 158, 125, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .big-small::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(125, 183, 255, 0.1) 50%,
+        transparent 100%
+      );
+      animation: shine 3s infinite;
+    }
+    
+    .big-small.BIG {
+      color: var(--secondary);
+      text-shadow: 0 0 10px rgba(125, 183, 255, 0.5);
+    }
+    
+    .big-small.SMALL {
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(255, 158, 125, 0.5);
+    }
+    
+    .pattern-selector-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .pattern-selector {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .pattern-selector::before {
+      content: 'SELECT PATTERN';
+      display: block;
+      font-size: 0.7em;
+      color: var(--primary);
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    select {
+      background-color: rgba(20, 20, 40, 0.8);
+      color: var(--light);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 12px 40px 12px 15px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF9E7D'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 15px;
+      min-width: 200px;
+      box-shadow: 0 0 10px rgba(255, 158, 125, 0.2);
+    }
+    
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 158, 125, 0.3);
+    }
+    
+    select:hover {
+      background-color: rgba(30, 30, 50, 0.8);
+    }
+    
+    .credit {
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: rgba(200, 200, 255, 0.4);
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      100% { transform: translateX(100%) rotate(30deg); }
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 480px) {
-      .glass-container {
-        width: 90%;
+      .login-panel, .panel {
         padding: 20px;
+        min-width: 280px;
       }
       
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.5em;
       }
       
-      .prediction-result {
-        font-size: 1.5rem;
-        padding: 15px;
+      .big-small {
+        font-size: 1.5em;
+        padding: 12px;
+      }
+      
+      .time-display {
+        font-size: 1em;
+        padding: 8px 16px;
+      }
+      
+      select {
+        min-width: 180px;
+        padding: 10px 35px 10px 12px;
+      }
+      
+      .logo {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Background elements -->
-  <div class="bg-elements">
-    <div class="floating-element"></div>
-    <div class="floating-element"></div>
-    <div class="floating-element"></div>
-  </div>
-
   <!-- Login Panel -->
-  <div class="glass-container" id="loginPanel">
-    <div class="badge">PREMIUM</div>
+  <div class="login-panel" id="loginPanel">
+    <div class="premium-badge">PREMIUM</div>
     
-    <div class="header">
-      <div class="logo-container">
-        <div class="logo-glow"></div>
-        <div class="logo">
-          <i class="fas fa-robot"></i>
-        </div>
-      </div>
-      <h1>PREMIUM TRX AI SERVER</h1>
-      <div class="subtitle">Intelligent Forecast System</div>
+    <div class="logo">
+      <i class="fas fa-robot"></i>
     </div>
     
+    <h1>PREDICTION AI PATTERN</h1>
+    <div class="subtitle">Premium Access Required</div>
+    
     <div class="form-group">
-      <label for="keyInput">Access Key</label>
-      <div class="input-container">
-        <input type="text" id="keyInput" placeholder="Enter your premium access key">
-      </div>
+      <label for="keyInput">ACCESS KEY</label>
+      <input type="text" id="keyInput" placeholder="Enter your premium access key">
     </div>
     
     <button onclick="activateKey()">
@@ -615,56 +456,45 @@
       <div class="success-icon">
         <i class="fas fa-check-circle"></i>
       </div>
-      <div style="margin-bottom: 15px; font-weight: 500;">Premium Access Granted!</div>
-      <button onclick="showPredictionPage()" style="background: linear-gradient(135deg, var(--neon-green), #00a86b);">
-        <i class="fas fa-chart-line"></i> VIEW PREDICTIONS
+      <div style="margin-bottom: 15px; font-weight: 500; color: var(--secondary);">PREMIUM ACCESS GRANTED!</div>
+      <button onclick="showPredictionPage()" style="background: linear-gradient(135deg, var(--secondary), #4a90e2);">
+        <i class="fas fa-rocket"></i> LAUNCH AI PREDICTIONS
       </button>
     </div>
     
     <div class="footer">CREDITS BY PYAUNGGYI</div>
   </div>
 
-  <!-- AI Server Container -->
-  <div class="glass-container" id="aiServerContainer" style="display: none;">
-    <div class="badge">ACTIVE</div>
-    
-    <div class="header">
-      <div class="logo-container">
-        <div class="logo-glow"></div>
-        <div class="logo">
-          <i class="fas fa-brain"></i>
-        </div>
-      </div>
-      <h1>AI PREDICTION ACTIVE</h1>
-      <div class="subtitle">Real-time Analysis & Forecast</div>
-    </div>
-    
-    <div class="server-indicator" id="serverIndicator">
-      ACTIVE SERVER: <span id="currentServer">1</span>
-    </div>
-    
-    <div class="data-display">
-      <div class="data-item">
-        <div class="data-label">PERIOD NUMBER</div>
-        <div class="data-value" id="periodNumber">20230801100010001</div>
-      </div>
-      <div class="data-item">
-        <div class="data-label">SEC</div>
-        <div class="data-value" id="seconds">00:--</div>
+  <!-- Prediction Panel -->
+  <div class="panel" id="predictionPanel">
+    <h1>PREDICTION AI PATTERN</h1>
+    <div class="pattern-selector-container">
+      <div class="pattern-selector">
+        <select id="patternSelector" onchange="changePattern()">
+          <option value="1">Pattern 1</option>
+          <option value="2">Pattern 2</option>
+          <option value="3">Pattern 3</option>
+          <option value="4">Pattern 4</option>
+          <option value="5">Pattern 5</option>
+          <option value="6">Pattern 6</option>
+          <option value="7">Pattern 7</option>
+          <option value="8">Pattern 8</option>
+          <option value="9">Pattern 9</option>
+          <option value="10">Pattern 10</option>
+        </select>
       </div>
     </div>
-    
-    <div class="prediction-container">
-      <div class="prediction-result" id="prediction">-----</div>
+    <div class="data">
+      <span id="period">Period: Loading...</span>
     </div>
-    
-    <div class="action-buttons">
-      <button class="action-btn win-btn" id="winBtn">WIN</button>
-      <button class="action-btn lose-btn" id="loseBtn">LOSE</button>
+    <div class="data">
+      <div class="time-display" id="currentTime">--:--:--</div>
     </div>
-    
-    <div class="signature">TRX AI SERVER SYSTEM</div>
-    <div class="credit">CRD BY PYAUNGGYI</div>
+    <div class="data">
+      <span id="countdown">Next: 00:--</span>
+    </div>
+    <div class="big-small" id="prediction">Waiting...</div>
+    <div class="credit">Crd By Pyaunggyi</div>
   </div>
 
   <script>
@@ -691,12 +521,11 @@
     function activateKey() {
       const key = document.getElementById('keyInput').value.trim().toUpperCase();
       if (!key) {
-        alert("Please enter a key");
+        alert("Please enter a premium access key");
         return;
       }
 
-      // Show loading state
-      const btn = document.querySelector('.glass-container button');
+      const btn = document.querySelector('.login-panel button');
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...';
       btn.disabled = true;
@@ -708,7 +537,7 @@
         if (snapshot.exists()) {
           const data = snapshot.val();
           if (data.used) {
-            alert("This key is already used!");
+            alert("This access key has already been used!");
             return;
           }
           
@@ -718,17 +547,16 @@
           
           db.ref('keys/' + key).update({ used: true });
           
-          // Show success
           document.getElementById('content').style.display = 'block';
-          alert(`Key Activated! Added ${data.duration} minutes`);
+          alert(`Premium Access Activated! Added ${data.duration} minutes`);
           startSession();
         } else {
-          alert("Invalid Key");
+          alert("Invalid Access Key. Please check and try again.");
         }
       }).catch(error => {
         btn.innerHTML = originalText;
         btn.disabled = false;
-        alert("Connection error. Please try again.");
+        alert("Connection error. Please check your internet and try again.");
         console.error(error);
       });
     }
@@ -745,11 +573,14 @@
       
       if (remaining <= 0) {
         clearInterval(timerInterval);
-        document.getElementById('timer').textContent = "Premium expired";
+        document.getElementById('timer').textContent = "Premium access expired";
         document.getElementById('content').style.display = 'none';
         localStorage.removeItem('expireTime');
+        
         // Auto redirect to login when premium expires
-        showLoginPage();
+        if (document.getElementById("predictionPanel").style.display === "block") {
+          showLoginPage();
+        }
         return;
       }
       
@@ -761,27 +592,25 @@
     }
 
     function showPredictionPage() {
-      document.getElementById('loginPanel').style.display = 'none';
-      document.getElementById('aiServerContainer').style.display = 'block';
-      initializeAIServer();
+      document.getElementById("loginPanel").style.display = "none";
+      document.getElementById("predictionPanel").style.display = "block";
+      initializePredictionSystem();
     }
 
     function showLoginPage() {
-      document.getElementById('aiServerContainer').style.display = 'none';
-      document.getElementById('loginPanel').style.display = 'block';
+      document.getElementById("predictionPanel").style.display = "none";
+      document.getElementById("loginPanel").style.display = "block";
     }
 
     // Initialize
     if (expireTime && Date.now() < expireTime) {
-      // If session is active, show success content
       document.getElementById('content').style.display = 'block';
       startSession();
     }
 
-    // AI Server Code
-    function initializeAIServer() {
-      // Server patterns
-      const serverPatterns = {
+    // Prediction System Code
+    function initializePredictionSystem() {
+      const patterns = {
         1: ['BIG', 'SMALL', 'BIG', 'SMALL', 'BIG'],
         2: ['BIG', 'BIG', 'SMALL', 'SMALL', 'BIG', 'BIG', 'SMALL'],
         3: ['BIG', 'SMALL', 'SMALL', 'SMALL', 'BIG'],
@@ -794,90 +623,60 @@
         10: ['SMALL', 'BIG', 'BIG', 'SMALL', 'BIG', 'SMALL']
       };
 
-      // Custom random server rotation pattern
-      const serverRotationPattern = [1,8,2,4,5,9,1,3,4,8,3,10,4,10,4,3,3,4,8,7,2,1,9,4,3,8,1,3];
-      let rotationIndex = 0;
-
-      let currentServer = 1;
-      let currentPattern = serverPatterns[currentServer];
-      let patternIndex = 0;
+      let currentPattern = patterns[1];
+      let index = 0;
       let lastMinute = -1;
 
-      // Update server display
-      function updateServerDisplay() {
-        document.getElementById('currentServer').textContent = currentServer;
+      function changePattern() {
+        const selected = document.getElementById('patternSelector').value;
+        currentPattern = patterns[selected];
+        index = 0;
       }
 
-      // Rotate server according to custom pattern
-      function rotateServer() {
-        // Rotate after 5 seconds
-        setTimeout(() => {
-          currentServer = serverRotationPattern[rotationIndex];
-          currentPattern = serverPatterns[currentServer];
-          patternIndex = 0;
-          updateServerDisplay();
-          
-          // Move to next position in pattern (loop back to start if needed)
-          rotationIndex = (rotationIndex + 1) % serverRotationPattern.length;
-          
-          // Add visual feedback
-          const indicator = document.getElementById('serverIndicator');
-          indicator.style.animation = 'none';
-          void indicator.offsetWidth; // Trigger reflow
-        }, 5000);
-      }
-
-      // Win/Lose button handlers
-      document.getElementById('winBtn').addEventListener('click', function() {
-        // Just visual feedback for win button
-        const btn = this;
-        btn.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-          btn.style.transform = 'scale(1)';
-        }, 100);
-      });
-      
-      document.getElementById('loseBtn').addEventListener('click', rotateServer);
-
-      // Update data every second
-      setInterval(() => {
+      // Get Myanmar Time (UTC+6:30)
+      function getMyanmarTime() {
         const now = new Date();
-        const seconds = now.getUTCSeconds();
-        const remaining = 60 - seconds;
-        const minutes = now.getUTCMinutes();
-        const hours = now.getUTCHours();
-        const totalMinutes = hours * 60 + minutes;
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        return new Date(utc + (6.5 * 60 * 60 * 1000));
+      }
+
+      function updateTime() {
+        const myanmarTime = getMyanmarTime();
+        const hours = String(myanmarTime.getHours()).padStart(2, '0');
+        const minutes = String(myanmarTime.getMinutes()).padStart(2, '0');
+        const seconds = String(myanmarTime.getSeconds()).padStart(2, '0');
+        
+        // Update current time display
+        document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+        
+        // Update countdown timer
+        const remainingSeconds = 60 - myanmarTime.getSeconds();
+        document.getElementById('countdown').textContent = `Next: 00:${String(remainingSeconds).padStart(2, '0')}`;
 
         // Update period number
-        const y = now.getUTCFullYear();
-        const m = String(now.getUTCMonth() + 1).padStart(2, '0');
-        const d = String(now.getUTCDate()).padStart(2, '0');
+        const y = myanmarTime.getFullYear();
+        const m = String(myanmarTime.getMonth() + 1).padStart(2, '0');
+        const d = String(myanmarTime.getDate()).padStart(2, '0');
+        const totalMinutes = myanmarTime.getHours() * 60 + myanmarTime.getMinutes();
         const periodNum = `${y}${m}${d}1000${10001 + totalMinutes}`;
-        document.getElementById('periodNumber').textContent = periodNum;
+        document.getElementById('period').textContent = `Period: ${periodNum}`;
 
-        // Update seconds
-        document.getElementById('seconds').textContent = `00:${String(remaining).padStart(2, '0')}`;
-
-        // Update prediction at minute change
-        if (seconds === 0 && lastMinute !== minutes) {
+        // Change BIG/SMALL each minute
+        if (myanmarTime.getSeconds() === 0 && lastMinute !== myanmarTime.getMinutes()) {
           const predictionElement = document.getElementById('prediction');
-          const nextPrediction = currentPattern[patternIndex];
-          
-          // Add transition effect
-          predictionElement.style.opacity = '0';
-          setTimeout(() => {
-            predictionElement.textContent = nextPrediction;
-            predictionElement.className = `prediction-result ${nextPrediction}`;
-            predictionElement.style.opacity = '1';
-          }, 300);
-          
-          patternIndex = (patternIndex + 1) % currentPattern.length;
-          lastMinute = minutes;
+          const nextPrediction = currentPattern[index];
+          predictionElement.textContent = nextPrediction;
+          predictionElement.className = 'big-small ' + nextPrediction;
+          index = (index + 1) % currentPattern.length;
+          lastMinute = myanmarTime.getMinutes();
         }
-      }, 1000);
+      }
 
-      // Initialize
-      updateServerDisplay();
+      // Initialize time display
+      updateTime();
+      
+      // Update time every second
+      setInterval(updateTime, 1000);
     }
   </script>
 </body>
