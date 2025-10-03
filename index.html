@@ -1,279 +1,884 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ai Prediction</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PREMIUM TRX AI SERVER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
+    :root {
+      --neon-blue: #00f0ff;
+      --neon-purple: #b300ff;
+      --neon-pink: #ff00f5;
+      --neon-green: #00ff9d;
+      --neon-yellow: #fff000;
+      --deep-space: #050510;
+      --glass-dark: rgba(15, 15, 35, 0.7);
+      --glass-light: rgba(255, 255, 255, 0.1);
+      --starlight: #f0f0ff;
+    }
+    
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--deep-space);
+      color: var(--starlight);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.05) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(179, 0, 255, 0.05) 0%, transparent 25%),
+        linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(5,5,16,0.95));
+      position: relative;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0a0f1d, #1c2337);
-      color: #e5edff;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+    /* Animated background elements */
+    .bg-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
       overflow: hidden;
     }
 
-    .container {
-      background: #10192d;
-      border-radius: 20px;
-      padding: 40px 30px;
-      box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15), inset 0 0 8px #00d9ff30;
-      text-align: center;
-      width: 100%;
-      max-width: 420px;
-      transition: 0.4s ease;
+    .floating-element {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
+      filter: blur(20px);
+      animation: float 15s infinite linear;
     }
 
-    .container:hover {
-      box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3), inset 0 0 10px #00c0ff55;
-      transform: translateY(-4px);
+    .floating-element:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 5%;
+      animation-duration: 25s;
+    }
+
+    .floating-element:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      top: 60%;
+      right: 10%;
+      animation-duration: 20s;
+      background: radial-gradient(circle, rgba(179, 0, 255, 0.1) 0%, transparent 70%);
+    }
+
+    .floating-element:nth-child(3) {
+      width: 150px;
+      height: 150px;
+      bottom: 20%;
+      left: 20%;
+      animation-duration: 30s;
+      background: radial-gradient(circle, rgba(255, 0, 245, 0.1) 0%, transparent 70%);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20px, 20px) rotate(90deg);
+      }
+      50% {
+        transform: translate(0, 40px) rotate(180deg);
+      }
+      75% {
+        transform: translate(-20px, 20px) rotate(270deg);
+      }
+    }
+
+    /* Glass morphism container */
+    .glass-container {
+      position: relative;
+      width: 420px;
+      padding: 30px;
+      background: rgba(15, 15, 35, 0.5);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    /* Neon border effect */
+    .glass-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 20px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      z-index: -1;
+      opacity: 0.7;
+      animation: border-glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes border-glow {
+      0% {
+        opacity: 0.5;
+        filter: blur(5px);
+      }
+      100% {
+        opacity: 0.8;
+        filter: blur(10px);
+      }
+    }
+
+    /* Header section */
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .logo-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--neon-blue) 0%, transparent 70%);
+      filter: blur(15px);
+      opacity: 0.5;
+      animation: logo-pulse 3s infinite alternate;
+    }
+
+    @keyframes logo-pulse {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.3;
+      }
+      100% {
+        transform: scale(1.2);
+        opacity: 0.6;
+      }
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      transform: rotate(10deg);
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 30px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 0.12em;
-      text-shadow: 0 0 10px #00e5ff60;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+      margin-bottom: 5px;
+      letter-spacing: 3px;
+      position: relative;
+      padding-bottom: 10px;
     }
 
-    input[type="password"],
-    input[type="text"] {
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      width: 50%;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--neon-blue),
+        var(--neon-purple),
+        transparent
+      );
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--neon-blue);
+      text-align: left;
+    }
+
+    .input-container {
+      position: relative;
+    }
+
+    input {
       width: 100%;
-      padding: 16px;
-      margin-bottom: 25px;
-      border: none;
-      border-radius: 14px;
-      background: #0f1a2c;
-      color: #d0eaff;
-      font-size: 1.1rem;
-      text-align: center;
-      box-shadow: inset 0 0 10px #0b314f;
-      transition: 0.3s ease;
+      padding: 14px 16px;
+      background: rgba(10, 10, 25, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 15px;
+      color: var(--starlight);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
     }
 
     input:focus {
       outline: none;
-      background: #162c4d;
-      box-shadow: 0 0 12px #00cfff;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
     }
 
-    .btn {
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 18px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      background: linear-gradient(90deg, #00eaff, #0070ff);
-      color: #06121d;
-      text-transform: uppercase;
-      box-shadow: 0 6px 20px rgba(0, 195, 255, 0.5);
-      transition: 0.3s ease;
-    }
-
-    .btn:hover {
-      background: linear-gradient(90deg, #0090dd, #0040aa);
-      color: #d8f6ff;
-      transform: translateY(-2px);
-    }
-
-    .btn-channel {
-      background: linear-gradient(90deg, #3a7dff, #00aaff);
-      color: #fff;
-    }
-
-    .btn-owner {
-      background: linear-gradient(90deg, #ffc400, #ffaa00);
-      color: #241a00;
-    }
-
-    .footer {
-      margin-top: 20px;
+    /* Premium badge */
+    .badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+      color: white;
+      padding: 6px 12px;
+      border-radius: 50px;
       font-size: 12px;
-      color: #8095b3;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
 
-    .digits-inputs {
-      display: flex;
-      justify-content: center;
-      flex-wrap: nowrap;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .digits-inputs input {
-      width: 45px;
-      height: 60px;
-      font-size: 2rem;
-      font-weight: 700;
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+      color: white;
       border: none;
       border-radius: 10px;
-      background: #0e1f33;
-      color: #00ddff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Timer */
+    #timer {
       text-align: center;
-      box-shadow: inset 0 0 8px #004a70;
+      margin-top: 15px;
+      font-size: 14px;
+      color: var(--neon-blue);
+      padding: 12px;
+      background: rgba(10, 10, 25, 0.7);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      backdrop-filter: blur(5px);
     }
 
-    #result {
-      margin-top: 24px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      background: #141e36;
-      padding: 14px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #00385050;
-      min-height: 58px;
-    }
-
-    #result.big {
-      color: #00ffad;
-      border: 2px solid #00d9a0;
-    }
-
-    #result.small {
-      color: #ff7070;
-      border: 2px solid #ff4d4d;
-    }
-
-    #page2 {
+    /* Success content */
+    #content {
       display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(10, 10, 25, 0.7);
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      backdrop-filter: blur(5px);
     }
 
-    .loading-dots::after {
-      content: '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
-      animation: dots 1s steps(10) infinite;
-      display: inline-block;
-      font-size: 1.4rem;
-      margin-left: 8px;
-      vertical-align: middle;
+    .success-icon {
+      color: var(--neon-green);
+      font-size: 28px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
     }
 
-    @keyframes dots {
-      to { content: '⠋'; }
+    /* Footer */
+    .footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    @media (max-width: 480px) {
-      .digits-inputs input {
-        width: 38px;
-        height: 50px;
-        font-size: 1.6rem;
+    /* AI Server specific styles */
+    .server-indicator {
+      text-align: center;
+      margin: 15px 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      color: var(--neon-blue);
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+    }
+
+    .data-display {
+      margin: 20px 0;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .data-item {
+      position: relative;
+      padding: 10px 15px;
+      background: rgba(10, 10, 25, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      flex: 1;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+
+    .data-label {
+      font-size: 0.7rem;
+      color: var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .data-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      color: var(--starlight);
+      word-break: break-all;
+    }
+
+    /* Prediction result */
+    .prediction-container {
+      position: relative;
+      margin: 25px 0;
+      padding: 5px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+      animation: prediction-glow 2s infinite alternate;
+    }
+
+    @keyframes prediction-glow {
+      0% {
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
       }
+      100% {
+        box-shadow: 0 0 20px rgba(179, 0, 255, 0.7);
+      }
+    }
 
+    .prediction-result {
+      padding: 20px;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      background: rgba(10, 10, 25, 0.9);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .prediction-result.BIG {
+      color: var(--neon-green);
+      text-shadow: 0 0 15px rgba(0, 255, 157, 0.7);
+    }
+
+    .prediction-result.SMALL {
+      color: var(--neon-pink);
+      text-shadow: 0 0 15px rgba(255, 0, 245, 0.7);
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      gap: 15px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .win-btn {
+      background: linear-gradient(135deg, var(--neon-green), #00a86b);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 255, 157, 0.3);
+    }
+
+    .win-btn:hover {
+      box-shadow: 0 6px 20px rgba(0, 255, 157, 0.5);
+    }
+
+    .lose-btn {
+      background: linear-gradient(135deg, var(--neon-pink), #cc0099);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 0, 245, 0.3);
+    }
+
+    .lose-btn:hover {
+      box-shadow: 0 6px 20px rgba(255, 0, 245, 0.5);
+    }
+
+    /* Signature */
+    .signature {
+      margin-top: 20px;
+      font-size: 0.7rem;
+      color: rgba(200, 200, 255, 0.3);
+      text-align: center;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .signature::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 240, 255, 0.3),
+        transparent
+      );
+    }
+
+    /* Credit */
+    .credit {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.7;
+      text-shadow: 0 0 5px rgba(179, 0, 255, 0.5);
+      animation: credit-glow 2s infinite alternate;
+    }
+
+    @keyframes credit-glow {
+      0% { opacity: 0.5; text-shadow: 0 0 5px rgba(179, 0, 255, 0.5); }
+      100% { opacity: 1; text-shadow: 0 0 15px rgba(179, 0, 255, 0.8); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .glass-container {
+        width: 90%;
+        padding: 20px;
+      }
+      
       h1 {
         font-size: 1.5rem;
+      }
+      
+      .prediction-result {
+        font-size: 1.5rem;
+        padding: 15px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="page1">
-    <h1>Ai Prediction</h1>
-    <input type="password" id="keyInput" placeholder="Enter Access Key" maxlength="12" />
-    <button class="btn" onclick="checkKey()">Start AI Prediction</button>
-    <button class="btn btn-channel" onclick="window.open('https://t.me/PGMONEY67800', '_blank')">Join Telegram Channel</button>
-    <button class="btn btn-owner" onclick="window.open('https://t.me/Paunggyi111', '_blank')">Contact Owner</button>
-    <div class="footer">CRD BY PYAUNGGYI</div>
+  <!-- Background elements -->
+  <div class="bg-elements">
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
   </div>
 
-  <div class="container" id="page2">
-    <h1>Enter 5 Digits (0-9)</h1>
-    <div class="digits-inputs">
-      <input type="text" maxlength="1" class="digit-input" />
-      <input type="text" maxlength="1" class="digit-input" />
-      <input type="text" maxlength="1" class="digit-input" />
-      <input type="text" maxlength="1" class="digit-input" />
-      <input type="text" maxlength="1" class="digit-input" />
+  <!-- Login Panel -->
+  <div class="glass-container" id="loginPanel">
+    <div class="badge">PREMIUM</div>
+    
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <div class="logo">
+          <i class="fas fa-robot"></i>
+        </div>
+      </div>
+      <h1>PREMIUM TRX AI SERVER</h1>
+      <div class="subtitle">Intelligent Forecast System</div>
     </div>
-    <button class="btn" onclick="handlePredict()">Predict Number</button>
-    <div id="result"></div>
+    
+    <div class="form-group">
+      <label for="keyInput">Access Key</label>
+      <div class="input-container">
+        <input type="text" id="keyInput" placeholder="Enter your premium access key">
+      </div>
+    </div>
+    
+    <button onclick="activateKey()">
+      <i class="fas fa-key"></i> ACTIVATE ACCESS
+    </button>
+    
+    <div id="timer"></div>
+    
+    <div id="content">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div style="margin-bottom: 15px; font-weight: 500;">Premium Access Granted!</div>
+      <button onclick="showPredictionPage()" style="background: linear-gradient(135deg, var(--neon-green), #00a86b);">
+        <i class="fas fa-chart-line"></i> VIEW PREDICTIONS
+      </button>
+    </div>
+    
+    <div class="footer">CREDITS BY PYAUNGGYI</div>
+  </div>
+
+  <!-- AI Server Container -->
+  <div class="glass-container" id="aiServerContainer" style="display: none;">
+    <div class="badge">ACTIVE</div>
+    
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <div class="logo">
+          <i class="fas fa-brain"></i>
+        </div>
+      </div>
+      <h1>AI PREDICTION ACTIVE</h1>
+      <div class="subtitle">Real-time Analysis & Forecast</div>
+    </div>
+    
+    <div class="server-indicator" id="serverIndicator">
+      ACTIVE SERVER: <span id="currentServer">1</span>
+    </div>
+    
+    <div class="data-display">
+      <div class="data-item">
+        <div class="data-label">PERIOD NUMBER</div>
+        <div class="data-value" id="periodNumber">20230801100010001</div>
+      </div>
+      <div class="data-item">
+        <div class="data-label">SEC</div>
+        <div class="data-value" id="seconds">00:--</div>
+      </div>
+    </div>
+    
+    <div class="prediction-container">
+      <div class="prediction-result" id="prediction">-----</div>
+    </div>
+    
+    <div class="action-buttons">
+      <button class="action-btn win-btn" id="winBtn">WIN</button>
+      <button class="action-btn lose-btn" id="loseBtn">LOSE</button>
+    </div>
+    
+    <div class="signature">TRX AI SERVER SYSTEM</div>
+    <div class="credit">CRD BY PYAUNGGYI</div>
   </div>
 
   <script>
-    const ACCESS_KEY = "Ai112233";
-    const page1 = document.getElementById("page1");
-    const page2 = document.getElementById("page2");
-    const keyInput = document.getElementById("keyInput");
-    const digitInputs = document.querySelectorAll(".digit-input");
-    const resultDiv = document.getElementById("result");
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAy3QvFmhKiOX38MZiINfZq2yYXGhb7uL8",
+      authDomain: "ck-adm.firebaseapp.com",
+      databaseURL: "https://ck-adm-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "ck-adm",
+      storageBucket: "ck-adm.appspot.com",
+      messagingSenderId: "192822942347",
+      appId: "1:192822942347:web:f27eee393e16c84544528e"
+    };
 
-    function checkKey() {
-      if (keyInput.value.trim() === ACCESS_KEY) {
-        page1.style.display = "none";
-        page2.style.display = "block";
-        digitInputs[0].focus();
-      } else {
-        alert("Invalid Access Key!");
-        keyInput.value = "";
-        keyInput.focus();
-      }
-    }
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    digitInputs.forEach((input, idx) => {
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/[^0-9]/g, "");
-        if (input.value && idx < digitInputs.length - 1) {
-          digitInputs[idx + 1].focus();
-        }
-        resultDiv.textContent = "";
-        resultDiv.classList.remove("big", "small");
-      });
+    // Global Variables
+    let expireTime = parseInt(localStorage.getItem('expireTime')) || 0;
+    let timerInterval;
 
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && !input.value && idx > 0) {
-          digitInputs[idx - 1].focus();
-        }
-      });
-    });
-
-    function predict(numbers) {
-      const digits = numbers.map(n => parseInt(n));
-      const sum = digits.reduce((a, b) => a + b, 0);
-      const confidence = 100 - Math.abs(sum - 22.5) * 4;
-      const prediction = sum > 22 ? "Big" : "Small";
-      return { prediction, confidence: confidence.toFixed(1), sum };
-    }
-
-    function handlePredict() {
-      const values = [...digitInputs].map(i => i.value.trim());
-      if (values.some(v => !/^\d$/.test(v))) {
-        alert("Please enter all 5 digits correctly.");
+    // Login Page Functions
+    function activateKey() {
+      const key = document.getElementById('keyInput').value.trim().toUpperCase();
+      if (!key) {
+        alert("Please enter a key");
         return;
       }
 
-      resultDiv.textContent = "Analyzing...";
-      resultDiv.classList.remove("big", "small");
-      resultDiv.classList.add("loading-dots");
+      // Show loading state
+      const btn = document.querySelector('.glass-container button');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...';
+      btn.disabled = true;
 
-      setTimeout(() => {
-        const { prediction, confidence, sum } = predict(values);
-        resultDiv.classList.remove("loading-dots");
-        resultDiv.textContent = `Prediction: ${prediction} (Sum: ${sum}) — Confidence: ${confidence}%`;
-        resultDiv.classList.add(prediction.toLowerCase());
-      }, 3000);
+      db.ref('keys/' + key).once('value').then(snapshot => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          if (data.used) {
+            alert("This key is already used!");
+            return;
+          }
+          
+          const extraTime = data.duration * 60 * 1000;
+          expireTime = Math.max(Date.now(), expireTime) + extraTime;
+          localStorage.setItem('expireTime', expireTime);
+          
+          db.ref('keys/' + key).update({ used: true });
+          
+          // Show success
+          document.getElementById('content').style.display = 'block';
+          alert(`Key Activated! Added ${data.duration} minutes`);
+          startSession();
+        } else {
+          alert("Invalid Key");
+        }
+      }).catch(error => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert("Connection error. Please try again.");
+        console.error(error);
+      });
     }
 
-    keyInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        checkKey();
+    function startSession() {
+      if (timerInterval) clearInterval(timerInterval);
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      const now = Date.now();
+      const remaining = expireTime - now;
+      
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('timer').textContent = "Premium expired";
+        document.getElementById('content').style.display = 'none';
+        localStorage.removeItem('expireTime');
+        // Auto redirect to login when premium expires
+        showLoginPage();
+        return;
       }
-    });
+      
+      const hours = Math.floor(remaining / (1000 * 60 * 60));
+      const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+      
+      document.getElementById('timer').textContent = `Premium expires in: ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function showPredictionPage() {
+      document.getElementById('loginPanel').style.display = 'none';
+      document.getElementById('aiServerContainer').style.display = 'block';
+      initializeAIServer();
+    }
+
+    function showLoginPage() {
+      document.getElementById('aiServerContainer').style.display = 'none';
+      document.getElementById('loginPanel').style.display = 'block';
+    }
+
+    // Initialize
+    if (expireTime && Date.now() < expireTime) {
+      // If session is active, show success content
+      document.getElementById('content').style.display = 'block';
+      startSession();
+    }
+
+    // AI Server Code
+    function initializeAIServer() {
+      // Server patterns
+      const serverPatterns = {
+        1: ['BIG', 'SMALL', 'BIG', 'SMALL', 'BIG'],
+        2: ['BIG', 'BIG', 'SMALL', 'SMALL', 'BIG', 'BIG', 'SMALL'],
+        3: ['BIG', 'SMALL', 'SMALL', 'SMALL', 'BIG'],
+        4: ['SMALL', 'BIG', 'BIG', 'BIG', 'SMALL'],
+        5: ['BIG', 'BIG', 'SMALL', 'BIG', 'BIG'],
+        6: ['SMALL', 'SMALL', 'BIG', 'SMALL', 'BIG'],
+        7: ['BIG', 'BIG', 'BIG', 'SMALL', 'SMALL'],
+        8: ['SMALL', 'BIG', 'SMALL', 'BIG', 'SMALL'],
+        9: ['BIG', 'SMALL', 'BIG', 'BIG', 'SMALL', 'SMALL'],
+        10: ['SMALL', 'BIG', 'BIG', 'SMALL', 'BIG', 'SMALL']
+      };
+
+      // Custom random server rotation pattern
+      const serverRotationPattern = [1,8,2,4,5,9,1,3,4,8,3,10,4,10,4,3,3,4,8,7,2,1,9,4,3,8,1,3];
+      let rotationIndex = 0;
+
+      let currentServer = 1;
+      let currentPattern = serverPatterns[currentServer];
+      let patternIndex = 0;
+      let lastMinute = -1;
+
+      // Update server display
+      function updateServerDisplay() {
+        document.getElementById('currentServer').textContent = currentServer;
+      }
+
+      // Rotate server according to custom pattern
+      function rotateServer() {
+        // Rotate after 5 seconds
+        setTimeout(() => {
+          currentServer = serverRotationPattern[rotationIndex];
+          currentPattern = serverPatterns[currentServer];
+          patternIndex = 0;
+          updateServerDisplay();
+          
+          // Move to next position in pattern (loop back to start if needed)
+          rotationIndex = (rotationIndex + 1) % serverRotationPattern.length;
+          
+          // Add visual feedback
+          const indicator = document.getElementById('serverIndicator');
+          indicator.style.animation = 'none';
+          void indicator.offsetWidth; // Trigger reflow
+        }, 5000);
+      }
+
+      // Win/Lose button handlers
+      document.getElementById('winBtn').addEventListener('click', function() {
+        // Just visual feedback for win button
+        const btn = this;
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          btn.style.transform = 'scale(1)';
+        }, 100);
+      });
+      
+      document.getElementById('loseBtn').addEventListener('click', rotateServer);
+
+      // Update data every second
+      setInterval(() => {
+        const now = new Date();
+        const seconds = now.getUTCSeconds();
+        const remaining = 60 - seconds;
+        const minutes = now.getUTCMinutes();
+        const hours = now.getUTCHours();
+        const totalMinutes = hours * 60 + minutes;
+
+        // Update period number
+        const y = now.getUTCFullYear();
+        const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const d = String(now.getUTCDate()).padStart(2, '0');
+        const periodNum = `${y}${m}${d}1000${10001 + totalMinutes}`;
+        document.getElementById('periodNumber').textContent = periodNum;
+
+        // Update seconds
+        document.getElementById('seconds').textContent = `00:${String(remaining).padStart(2, '0')}`;
+
+        // Update prediction at minute change
+        if (seconds === 0 && lastMinute !== minutes) {
+          const predictionElement = document.getElementById('prediction');
+          const nextPrediction = currentPattern[patternIndex];
+          
+          // Add transition effect
+          predictionElement.style.opacity = '0';
+          setTimeout(() => {
+            predictionElement.textContent = nextPrediction;
+            predictionElement.className = `prediction-result ${nextPrediction}`;
+            predictionElement.style.opacity = '1';
+          }, 300);
+          
+          patternIndex = (patternIndex + 1) % currentPattern.length;
+          lastMinute = minutes;
+        }
+      }, 1000);
+
+      // Initialize
+      updateServerDisplay();
+    }
   </script>
 </body>
 </html>
