@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prediction AI Pattern</title>
+  <title>CK AI Prediction</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -18,8 +18,13 @@
       --light: #f0f0ff;
     }
     
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       font-family: 'Montserrat', sans-serif;
       background-color: var(--darker);
       color: var(--light);
@@ -27,15 +32,18 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 25% 25%, rgba(214, 125, 255, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 75% 75%, rgba(125, 183, 255, 0.1) 0%, transparent 50%);
+      padding: 20px;
     }
-    
-    /* Login Panel Styles */
-    .login-panel {
+
+    /* Login Container Styles */
+    .login-container {
+      width: 100%;
+      max-width: 400px;
       background: linear-gradient(145deg, #12121a, #0e0e15);
       border: 1px solid rgba(255, 158, 125, 0.3);
       border-radius: 20px;
@@ -45,14 +53,13 @@
         0 10px 30px rgba(0, 0, 0, 0.5),
         0 0 20px rgba(255, 158, 125, 0.2),
         inset 0 0 15px rgba(255, 158, 125, 0.1);
-      min-width: 350px;
-      max-width: 90%;
       position: relative;
       overflow: hidden;
       z-index: 1;
+      margin-bottom: 20px;
     }
     
-    .login-panel::before {
+    .login-container::before {
       content: '';
       position: absolute;
       top: -50%;
@@ -71,85 +78,77 @@
       z-index: -1;
       animation: shine 8s infinite linear;
     }
-    
-    .premium-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: var(--dark);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: 0 0 15px rgba(255, 158, 125, 0.5);
-      animation: pulse 2s infinite;
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
     }
-    
+
     .logo {
       width: 80px;
       height: 80px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 15px;
       font-size: 32px;
       color: white;
-      box-shadow: 0 0 20px rgba(255, 158, 125, 0.5);
+      box-shadow: 0 4px 12px rgba(255, 158, 125, 0.3);
+      transform: rotate(10deg);
     }
-    
+
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.8em;
+      font-size: 24px;
+      font-weight: 700;
       color: var(--primary);
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       text-shadow: 0 0 10px rgba(255, 158, 125, 0.5);
       letter-spacing: 1px;
     }
-    
+
     .subtitle {
       font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 20px;
+      color: rgba(200, 200, 255, 0.7);
     }
-    
+
     .form-group {
       margin-bottom: 20px;
-      text-align: left;
     }
-    
+
     label {
       display: block;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 8px;
       color: var(--primary);
     }
-    
+
     input {
       width: 100%;
       padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(20, 20, 40, 0.8);
+      color: var(--light);
+      border: 2px solid var(--primary);
       border-radius: 10px;
       font-size: 15px;
-      color: var(--light);
       transition: all 0.2s;
+      font-family: 'Montserrat', sans-serif;
     }
-    
+
     input:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(255, 158, 125, 0.1);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(214, 125, 255, 0.2);
     }
-    
+
     button {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: var(--dark);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
       border: none;
       border-radius: 10px;
       font-size: 16px;
@@ -157,51 +156,64 @@
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
       box-shadow: 0 4px 12px rgba(255, 158, 125, 0.3);
+      font-family: 'Montserrat', sans-serif;
     }
-    
+
     button:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(255, 158, 125, 0.4);
     }
-    
+
     button:active {
       transform: translateY(0);
     }
-    
+
     #timer {
       text-align: center;
       margin-top: 15px;
       font-size: 14px;
-      color: var(--primary);
+      color: var(--secondary);
       padding: 12px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(20, 20, 40, 0.7);
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(125, 183, 255, 0.3);
     }
-    
-    #content {
+
+    #login-content {
       display: none;
       margin-top: 20px;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(20, 20, 40, 0.7);
       border-radius: 12px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(125, 183, 255, 0.3);
     }
-    
+
     .success-icon {
       color: var(--secondary);
-      font-size: 40px;
-      margin-bottom: 15px;
+      font-size: 28px;
+      margin-bottom: 12px;
     }
-    
+
     .footer {
-      margin-top: 20px;
+      margin-top: 25px;
       text-align: center;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(200, 200, 255, 0.4);
     }
-    
+
+    .badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
     /* Prediction Panel Styles */
     .panel {
       background: linear-gradient(145deg, #12121a, #0e0e15);
@@ -271,18 +283,6 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-    }
-    
-    .time-display {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.2em;
-      color: var(--secondary);
-      text-shadow: 0 0 8px rgba(125, 183, 255, 0.5);
-      background: rgba(20, 20, 30, 0.7);
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: 1px solid rgba(125, 183, 255, 0.3);
-      box-shadow: 0 0 10px rgba(125, 183, 255, 0.2);
     }
     
     .big-small {
@@ -397,12 +397,12 @@
     
     /* Responsive adjustments */
     @media (max-width: 480px) {
-      .login-panel, .panel {
+      .panel, .login-container {
         padding: 20px;
         min-width: 280px;
       }
       
-      h1 {
+      .panel h1 {
         font-size: 1.5em;
       }
       
@@ -411,38 +411,28 @@
         padding: 12px;
       }
       
-      .time-display {
-        font-size: 1em;
-        padding: 8px 16px;
-      }
-      
       select {
         min-width: 180px;
         padding: 10px 35px 10px 12px;
-      }
-      
-      .logo {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Login Panel -->
-  <div class="login-panel" id="loginPanel">
-    <div class="premium-badge">PREMIUM</div>
+  <!-- Login Container -->
+  <div class="login-container" id="login-container">
+    <div class="badge">PREMIUM</div>
     
-    <div class="logo">
-      <i class="fas fa-robot"></i>
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-robot"></i>
+      </div>
+      <h1>CK AI PREDICTION</h1>
+      <div class="subtitle">Intelligent Forecast System</div>
     </div>
     
-    <h1>PREDICTION AI PATTERN</h1>
-    <div class="subtitle">Premium Access Required</div>
-    
     <div class="form-group">
-      <label for="keyInput">ACCESS KEY</label>
+      <label for="keyInput">Access Key</label>
       <input type="text" id="keyInput" placeholder="Enter your premium access key">
     </div>
     
@@ -452,13 +442,13 @@
     
     <div id="timer"></div>
     
-    <div id="content">
+    <div id="login-content">
       <div class="success-icon">
         <i class="fas fa-check-circle"></i>
       </div>
-      <div style="margin-bottom: 15px; font-weight: 500; color: var(--secondary);">PREMIUM ACCESS GRANTED!</div>
-      <button onclick="showPredictionPage()" style="background: linear-gradient(135deg, var(--secondary), #4a90e2);">
-        <i class="fas fa-rocket"></i> LAUNCH AI PREDICTIONS
+      <div style="margin-bottom: 15px; font-weight: 500;">Premium Access Granted!</div>
+      <button onclick="showPredictionPage()" style="background: linear-gradient(135deg, var(--secondary) 0%, #219653 100%);">
+        <i class="fas fa-chart-line"></i> VIEW PREDICTIONS
       </button>
     </div>
     
@@ -466,7 +456,7 @@
   </div>
 
   <!-- Prediction Panel -->
-  <div class="panel" id="predictionPanel">
+  <div class="panel" id="prediction-panel">
     <h1>PREDICTION AI PATTERN</h1>
     <div class="pattern-selector-container">
       <div class="pattern-selector">
@@ -488,10 +478,7 @@
       <span id="period">Period: Loading...</span>
     </div>
     <div class="data">
-      <div class="time-display" id="currentTime">--:--:--</div>
-    </div>
-    <div class="data">
-      <span id="countdown">Next: 00:--</span>
+      <span id="prediction-timer">00:--</span>
     </div>
     <div class="big-small" id="prediction">Waiting...</div>
     <div class="credit">Crd By Pyaunggyi</div>
@@ -516,16 +503,36 @@
     // Global Variables
     let expireTime = parseInt(localStorage.getItem('expireTime')) || 0;
     let timerInterval;
+    let predictionInterval;
+
+    // Patterns for prediction
+    const patterns = {
+      1: ['BIG', 'SMALL', 'BIG', 'SMALL', 'BIG'],
+      2: ['BIG', 'BIG', 'SMALL', 'SMALL', 'BIG', 'BIG', 'SMALL'],
+      3: ['BIG', 'SMALL', 'SMALL', 'SMALL', 'BIG'],
+      4: ['SMALL', 'BIG', 'BIG', 'BIG', 'SMALL'],
+      5: ['BIG', 'BIG', 'SMALL', 'BIG', 'BIG'],
+      6: ['SMALL', 'SMALL', 'BIG', 'SMALL', 'BIG'],
+      7: ['BIG', 'BIG', 'BIG', 'SMALL', 'SMALL'],
+      8: ['SMALL', 'BIG', 'SMALL', 'BIG', 'SMALL'],
+      9: ['BIG', 'SMALL', 'BIG', 'BIG', 'SMALL', 'SMALL'],
+      10: ['SMALL', 'BIG', 'BIG', 'SMALL', 'BIG', 'SMALL']
+    };
+
+    let currentPattern = patterns[1];
+    let index = 0;
+    let lastMinute = -1;
 
     // Login Page Functions
     function activateKey() {
       const key = document.getElementById('keyInput').value.trim().toUpperCase();
       if (!key) {
-        alert("Please enter a premium access key");
+        alert("Please enter a key");
         return;
       }
 
-      const btn = document.querySelector('.login-panel button');
+      // Show loading state
+      const btn = document.querySelector('.login-container button');
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...';
       btn.disabled = true;
@@ -537,7 +544,7 @@
         if (snapshot.exists()) {
           const data = snapshot.val();
           if (data.used) {
-            alert("This access key has already been used!");
+            alert("This key is already used!");
             return;
           }
           
@@ -547,16 +554,17 @@
           
           db.ref('keys/' + key).update({ used: true });
           
-          document.getElementById('content').style.display = 'block';
-          alert(`Premium Access Activated! Added ${data.duration} minutes`);
+          // Show success
+          document.getElementById('login-content').style.display = 'block';
+          alert(`Key Activated! Added ${data.duration} minutes`);
           startSession();
         } else {
-          alert("Invalid Access Key. Please check and try again.");
+          alert("Invalid Key");
         }
       }).catch(error => {
         btn.innerHTML = originalText;
         btn.disabled = false;
-        alert("Connection error. Please check your internet and try again.");
+        alert("Connection error. Please try again.");
         console.error(error);
       });
     }
@@ -573,14 +581,10 @@
       
       if (remaining <= 0) {
         clearInterval(timerInterval);
-        document.getElementById('timer').textContent = "Premium access expired";
-        document.getElementById('content').style.display = 'none';
+        document.getElementById('timer').textContent = "Premium expired";
+        document.getElementById('login-content').style.display = 'none';
         localStorage.removeItem('expireTime');
-        
-        // Auto redirect to login when premium expires
-        if (document.getElementById("predictionPanel").style.display === "block") {
-          showLoginPage();
-        }
+        hidePredictionPage();
         return;
       }
       
@@ -592,91 +596,71 @@
     }
 
     function showPredictionPage() {
-      document.getElementById("loginPanel").style.display = "none";
-      document.getElementById("predictionPanel").style.display = "block";
-      initializePredictionSystem();
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('prediction-panel').style.display = 'block';
+      startPrediction();
     }
 
-    function showLoginPage() {
-      document.getElementById("predictionPanel").style.display = "none";
-      document.getElementById("loginPanel").style.display = "block";
+    function hidePredictionPage() {
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('prediction-panel').style.display = 'none';
+      if (predictionInterval) clearInterval(predictionInterval);
+    }
+
+    // Prediction Functions
+    function changePattern() {
+      const selected = document.getElementById('patternSelector').value;
+      currentPattern = patterns[selected];
+      index = 0;
+    }
+
+    function startPrediction() {
+      if (predictionInterval) clearInterval(predictionInterval);
+      
+      // Run immediately once
+      updatePrediction();
+      
+      // Then set interval
+      predictionInterval = setInterval(updatePrediction, 1000);
+    }
+
+    function updatePrediction() {
+      const now = new Date();
+      const seconds = now.getUTCSeconds();
+      const remaining = 60 - seconds;
+      const minutes = now.getUTCMinutes();
+      const hours = now.getUTCHours();
+      const totalMinutes = hours * 60 + minutes;
+
+      // Period Number
+      const y = now.getUTCFullYear();
+      const m = String(now.getUTCMonth() + 1).padStart(2, '0');
+      const d = String(now.getUTCDate()).padStart(2, '0');
+      const periodNum = `${y}${m}${d}1000${10001 + totalMinutes}`;
+      document.getElementById('period').textContent = `Period: ${periodNum}`;
+
+      // Timer
+      document.getElementById('prediction-timer').textContent = `00:${String(remaining).padStart(2, '0')}`;
+
+      // Change BIG/SMALL each minute
+      if (seconds === 0 && lastMinute !== minutes) {
+        const predictionElement = document.getElementById('prediction');
+        const nextPrediction = currentPattern[index];
+        predictionElement.textContent = nextPrediction;
+        predictionElement.className = 'big-small ' + nextPrediction;
+        index = (index + 1) % currentPattern.length;
+        lastMinute = minutes;
+      }
     }
 
     // Initialize
     if (expireTime && Date.now() < expireTime) {
-      document.getElementById('content').style.display = 'block';
+      // If session is active, show success content
+      document.getElementById('login-content').style.display = 'block';
       startSession();
-    }
-
-    // Prediction System Code
-    function initializePredictionSystem() {
-      const patterns = {
-        1: ['BIG', 'SMALL', 'BIG', 'SMALL', 'BIG'],
-        2: ['BIG', 'BIG', 'SMALL', 'SMALL', 'BIG', 'BIG', 'SMALL'],
-        3: ['BIG', 'SMALL', 'SMALL', 'SMALL', 'BIG'],
-        4: ['SMALL', 'BIG', 'BIG', 'BIG', 'SMALL'],
-        5: ['BIG', 'BIG', 'SMALL', 'BIG', 'BIG'],
-        6: ['SMALL', 'SMALL', 'BIG', 'SMALL', 'BIG'],
-        7: ['BIG', 'BIG', 'BIG', 'SMALL', 'SMALL'],
-        8: ['SMALL', 'BIG', 'SMALL', 'BIG', 'SMALL'],
-        9: ['BIG', 'SMALL', 'BIG', 'BIG', 'SMALL', 'SMALL'],
-        10: ['SMALL', 'BIG', 'BIG', 'SMALL', 'BIG', 'SMALL']
-      };
-
-      let currentPattern = patterns[1];
-      let index = 0;
-      let lastMinute = -1;
-
-      function changePattern() {
-        const selected = document.getElementById('patternSelector').value;
-        currentPattern = patterns[selected];
-        index = 0;
-      }
-
-      // Get Myanmar Time (UTC+6:30)
-      function getMyanmarTime() {
-        const now = new Date();
-        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-        return new Date(utc + (6.5 * 60 * 60 * 1000));
-      }
-
-      function updateTime() {
-        const myanmarTime = getMyanmarTime();
-        const hours = String(myanmarTime.getHours()).padStart(2, '0');
-        const minutes = String(myanmarTime.getMinutes()).padStart(2, '0');
-        const seconds = String(myanmarTime.getSeconds()).padStart(2, '0');
-        
-        // Update current time display
-        document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
-        
-        // Update countdown timer
-        const remainingSeconds = 60 - myanmarTime.getSeconds();
-        document.getElementById('countdown').textContent = `Next: 00:${String(remainingSeconds).padStart(2, '0')}`;
-
-        // Update period number
-        const y = myanmarTime.getFullYear();
-        const m = String(myanmarTime.getMonth() + 1).padStart(2, '0');
-        const d = String(myanmarTime.getDate()).padStart(2, '0');
-        const totalMinutes = myanmarTime.getHours() * 60 + myanmarTime.getMinutes();
-        const periodNum = `${y}${m}${d}1000${10001 + totalMinutes}`;
-        document.getElementById('period').textContent = `Period: ${periodNum}`;
-
-        // Change BIG/SMALL each minute
-        if (myanmarTime.getSeconds() === 0 && lastMinute !== myanmarTime.getMinutes()) {
-          const predictionElement = document.getElementById('prediction');
-          const nextPrediction = currentPattern[index];
-          predictionElement.textContent = nextPrediction;
-          predictionElement.className = 'big-small ' + nextPrediction;
-          index = (index + 1) % currentPattern.length;
-          lastMinute = myanmarTime.getMinutes();
-        }
-      }
-
-      // Initialize time display
-      updateTime();
-      
-      // Update time every second
-      setInterval(updateTime, 1000);
+    } else {
+      // If no active session, show login
+      hidePredictionPage();
     }
   </script>
 </body>
